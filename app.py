@@ -101,7 +101,13 @@ def get_video_metadata(path: Path) -> tuple[int, int, float] | None:
 
 
 def sanitize_text_for_ffmpeg(text: str) -> str:
-    return text.replace("%", "%%").replace(":", "\\:").replace("'", "\\'")
+    return (
+        text.replace("\\", "\\\\")
+            .replace("%", "%%")
+            .replace(":", "\\:")
+            .replace("'", "\\'")
+            .replace('"', '\\"')
+    )
 
 
 def get_default_system_font() -> Optional[Path]:
@@ -140,7 +146,7 @@ def build_drawtext_filter(
     if font_path:
         font_arg = f"fontfile='{sanitize_font_path(font_path)}'"
     else:
-        font_arg = "font='Arial'"
+        font_arg = "font='DejaVu Sans'"
 
     x_expr = f"(w-text_w-{margin})/2*(1+sin(t*0.8))"
     y_expr = f"(h-text_h-{margin})/2*(1+cos(t*0.7))"
